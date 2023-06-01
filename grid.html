@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Image Gallery</title>
+    <style>
+        .gallery {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .gallery img {
+            width: 200px;
+            height: 200px;
+            margin: 10px;
+            cursor: pointer;
+        }
+
+        #form-container {
+            display: none;
+        }
+
+        #dice-container {
+            display: none;
+        }
+
+        #coupon-container {
+            display: none;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="gallery">
+        <img src="regsiter.jpeg" onclick="showForm()" id="regsiter.jpeg">
+        <img src="login.png" onclick="showRegisteredUser()" id="login.png">
+        <img src="dice.jpeg" onclick="showDice()" id="dice.jpeg">
+        <img src="cupn.jpeg" onclick="showCoupon()" id="cupn.jpeg">
+    </div>
+
+    <div id="form-container">
+        <form id="registration-form">
+            <label for="name">Name:</label>
+            <input type="text" id="name" required><br>
+
+            <label for="email">Email:</label>
+            <input type="email" id="email" required><br>
+
+            <label for="username">Username:</label>
+            <input type="text" id="username" required><br>
+
+            <button type="submit">Register</button>
+        </form>
+    </div>
+
+    <div id="registered-user-container" style="display: none;">
+        <h2>Registered User:</h2>
+        <p id="registered-user"></p>
+    </div>
+
+    <div id="dice-container">
+        <h2>Roll the Dice</h2>
+        <img src="dice.jpg" onclick="rollDice()" id="dice">
+    </div>
+
+    <div id="coupon-container">
+        <h2>Coupon Code</h2>
+        <p id="coupon"></p>
+        <button onclick="generateCoupon()">Generate Coupon</button>
+    </div>
+
+    <script>
+        var isImage1Clicked = false;
+        var isImage2Clicked = false;
+        var isImage3Clicked = false;
+        var isImage4Clicked = false;
+
+        function showForm() {
+            if (!isImage1Clicked) {
+                document.getElementById('form-container').style.display = 'block';
+                isImage1Clicked = true;
+            }
+        }
+
+        function showRegisteredUser() {
+            if (isImage1Clicked && !isImage2Clicked) {
+                var name = document.getElementById('name').value;
+                var username = document.getElementById('username').value;
+                document.getElementById('registered-user').textContent = 'Name: ' + name + ', Username: ' + username;
+                document.getElementById('registered-user-container').style.display = 'block';
+                isImage2Clicked = true;
+            }
+        }
+
+        var diceClicks = 0;
+        var diceSum = 0;
+
+        function showDice() {
+            if (isImage2Clicked && !isImage3Clicked) {
+                document.getElementById('dice-container').style.display = 'block';
+                isImage3Clicked = true;
+            }
+        }
+
+        function rollDice() {
+            if (isImage3Clicked && diceClicks < 3) {
+                var diceValue = Math.floor(Math.random() * 6) + 1;
+                diceSum += diceValue;
+                diceClicks++;
+
+                if (diceClicks === 3) {
+                    if (diceSum > 10) {
+                        document.getElementById('image4').style.pointerEvents = 'auto';
+                    } else {
+                        document.getElementById('image4').style.pointerEvents = 'none';
+                        document.getElementById('image4').style.opacity = '0.5';
+                        document.getElementById('coupon-container').innerHTML = '<h2>Try again after scoring more than 10</h2>';
+                    }
+                }
+            }
+        }
+
+        function showCoupon() {
+            if (isImage3Clicked && diceClicks === 3 && !isImage4Clicked) {
+                document.getElementById('coupon-container').style.display = 'block';
+                isImage4Clicked = true;
+            }
+        }
+
+        function generateCoupon() {
+            if (isImage4Clicked) {
+                var coupon = generateRandomCoupon();
+                document.getElementById('coupon').textContent = coupon;
+                document.getElementById('coupon-container').innerHTML += '<img src="congratulations.jpg" alt="Congratulations">';
+            }
+        }
+
+        function generateRandomCoupon() {
+            var coupon = '';
+            var characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+            var length = 12;
+            for (var i = 0; i < length; i++) {
+                coupon += characters.charAt(Math.floor(Math.random() * characters.length));
+            }
+            return coupon;
+        }
+    </script>
+</body>
+
+</html>
